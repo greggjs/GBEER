@@ -17,7 +17,7 @@ def returnRecursiveDirFiles(root_dir):
     return result
 
 def make_genome_dir(request_id, form_data):
-    os.mkdir('./queries/{0}/genomes'.format(str(request_id)))
+    os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries/{0}/genomes'.format(str(request_id))))
     for key, value in form_data.iteritems():
         if 'orgList' in key and value is not unicode(''):
             genome_dir = form_data.get(key).replace(' ', '_')

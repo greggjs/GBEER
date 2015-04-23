@@ -2,8 +2,8 @@ from celery import Celery
 import settings
 import sys, os
 
-sys.path.append('./gene_block_evolution')
-sys.path.append('./operonVisualization/')
+sys.path.append(CALCULATION_PATH)
+sys.path.append(VISUALIZATION_PATH)
 
 import create_newick_tree
 import operonVisualUpdate

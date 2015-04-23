@@ -8,14 +8,11 @@ import tasks
 import settings
 import util
 
-sys.path.append('./gene_block_evolution')
-sys.path.append('./operonVisualization')
+sys.path.append(CALCULATION_PATH)
+sys.path.append(VISUALIZATION_PATH)
 
 import create_newick_tree
 import operonVisualUpdate
-
-OPERONS = []
-ORGANISMS = []
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = settings.UPLOAD_FOLDER
@@ -32,13 +29,16 @@ def get_operons():
     return operons
 
 def get_organisms():
-    org_dir = util.returnRecursiveDirs('./gene_block_evolution/genomes/')
+    org_dir = util.returnRecursiveDirs(GENOME_INFOLDER)
     org_list = ['']
     for org in org_dir:
         split_line = org.split('/')
         new_org = '{0}'.format(split_line[-1].replace('_', ' '))
         org_list.append(new_org)
     return org_list
+
+ORGANISMS = get_organisms()
+OPERONS = get_operons()
 
 @app.route('/query', methods=['GET', 'POST'])
 def run_query():
@@ -66,14 +66,14 @@ def get_results(requestid, task_id=None):
 
 @app.route("/img/<requestid>/<operon>/<event>")
 def get_image(requestid, operon, event):
-    fullpath = './queries/{0}/output_{0}/tree-gd-heat-diagrams_{0}/{1}_{2}'.format(requestid, operon, event)
+    fullpath = QUERY_STRING.format(requestid, operon, event)
     resp = make_response(open(fullpath).read())
     resp.content_type = 'image/png'
     return resp
 
 @app.route("/static/<filename>")
 def get_wheel(filename):
-    fullpath = './templates/{0}'.format(filename)
+    fullpath = TEMPLATE_STRING.format(filename)
     resp = make_response(open(fullpath).read())
     if filename == 'wheel.gif':
         resp.content_type = 'image/gif'
