@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Query Results{% endblock %}
+{% block head %}
+    {{ super() }}
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('.tabs .tab-links a').on('click', function(e)  {
+            var currentAttrValue = jQuery(this).attr('href');
+
+            // Show/Hide Tabs
+            jQuery('.tabs ' + currentAttrValue).show().siblings().hide();
+
+            // Change/remove current tab to active
+            jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
+            var request_id = '{{ request_id }}';
+            $.ajax({
+                method: 'GET',
+                url: '/job/' + request_id
+            }).done(function() {
+                $(currentAttrValue).html('<h3>Deletions</h3><img style="width: 1200px; height: 800px;" src="/img/{{ request_id }}/'
+                    + currentAttrValue.substring(1) + '/deletions.png"/>'
+                    +'<h3>Duplications</h3><img style="width: 1200px; height: 800px;" src="/img/{{ request_id }}/'
+                    + currentAttrValue.substring(1) + '/duplications.png"/>'
+                    +'<h3>Splits</h3><img style="width: 1200px; height: 800px;" src="/img/{{ request_id }}/'
+                    + currentAttrValue.substring(1) + '/splits.png"/>');
+            });
+            e.preventDefault();
+        });
+    });
+    </script>
+{% endblock %}
+{% block content %}
+    <h2>Results</h2>
+    <div class="tabs">
+        <ul class="tab-links">
+            {% for operon in operons %}
+                <li{% if loop.index == 0 %} class="active"{% endif %}><a href="#{{ operon }}">{{ operon }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for operon in operons %}
+                <div id="{{ operon }}" class="tab{% if loop.index == 0 %} active{% endif %}">
+                    <p>Please wait while your query about {{ operon }} is being processed</p>
+                    <img src="/static/wheel.gif" />
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block footer %}
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}
