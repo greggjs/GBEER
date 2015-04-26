@@ -13,7 +13,7 @@ sys.path.append(settings.VISUALIZATION_PATH)
 import create_newick_tree
 import operonVisualUpdate
 
-app = Celery('tasks', backend='amqp', broker='amqp://guest@localhost//')
+app = Celery('tasks', backend='amqp', broker='amqp://guest@localhost:5672//')
 app.conf.update(CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml'])
 
 @app.task
