@@ -88,6 +88,7 @@ if __name__ == '__main__':
     ORGANISMS = get_organisms()
     OPERONS = get_operons()
 
+    import logging
     from logging import FileHandler
     file_handler = FileHandler(settings.LOG_FILE)
     file_handler.setLevel(logging.WARNING)
