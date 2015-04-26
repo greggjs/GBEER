@@ -40,13 +40,18 @@ def run_query():
     if request.method == 'POST':
         try:
             request_id = uuid.uuid1()
+            app.logger.info('Received task {0}'.format(str(request_id)))
             # Make a dir for the request
             os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)))
             # Preprocess request for functions
             util.make_genome_dir(request_id, request.form)
+            app.logger.debug('Made genome dir for {0}'.format(str(request_id)))
             util.make_query_file(request_id, request.form)
+            app.logger.debug('Made query file for {0}'.format(str(request_id)))
             operon_names = util.make_operon_filter(request_id, request.form)
+            app.logger.debug('Made operon filter for {0}'.format(str(request_id)))
             util.make_operon_dir(request_id, request.form)
+            app.logger.debug('Made operon dir for {0}'.format(str(request_id)))
 
             current_task = tasks.createJob.apply_async([request_id], task_id=str(request_id))
             app.logger.info('Created task {0} running on Celery Queue'.format(str(request_id)))
@@ -54,7 +59,6 @@ def run_query():
         except Exception as e:
             app.logger.error('Error creating task {0}'.format(str(request_id)))
             app.logger.error(str(e))
-
 
     return render_template('query.html', organisms=ORGANISMS, operons=OPERONS)
 
@@ -96,7 +100,7 @@ if __name__ == '__main__':
     import logging
     from logging import FileHandler
     file_handler = FileHandler(settings.LOG_FILE)
-    file_handler.setLevel(logging.WARNING)
+    file_handler.setLevel(logging.DEBUG)
     app.logger.addHandler(file_handler)
 
     app.run('0.0.0.0')
