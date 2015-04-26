@@ -38,18 +38,23 @@ OPERONS = get_operons()
 @app.route('/query', methods=['GET', 'POST'])
 def run_query():
     if request.method == 'POST':
-        request_id = uuid.uuid1()
-        # Make a dir for the request
-        os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)))
-        # Preprocess request for functions
-        util.make_genome_dir(request_id, request.form)
-        util.make_query_file(request_id, request.form)
-        operon_names = util.make_operon_filter(request_id, request.form)
-        util.make_operon_dir(request_id, request.form)
+        try:
+            request_id = uuid.uuid1()
+            # Make a dir for the request
+            os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)))
+            # Preprocess request for functions
+            util.make_genome_dir(request_id, request.form)
+            util.make_query_file(request_id, request.form)
+            operon_names = util.make_operon_filter(request_id, request.form)
+            util.make_operon_dir(request_id, request.form)
 
-        current_task = tasks.createJob.apply_async([request_id], task_id=str(request_id))
+            current_task = tasks.createJob.apply_async([request_id], task_id=str(request_id))
+            app.logger.info('Created task {0} running on Celery Queue'.format(str(request_id)))
+            return redirect('results/{0}'.format(request_id))
+        except Exception as e:
+            app.logger.error('Error creating task {0}'.format(str(request_id)))
+            app.logger.error(str(e))
 
-        return redirect('results/{0}'.format(request_id))
 
     return render_template('query.html', organisms=ORGANISMS, operons=OPERONS)
 
