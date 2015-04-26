@@ -61,14 +61,14 @@ def get_results(requestid, task_id=None):
 
 @app.route("/img/<requestid>/<operon>/<event>")
 def get_image(requestid, operon, event):
-    fullpath = QUERY_STRING.format(requestid, operon, event)
+    fullpath = settings.QUERY_STRING.format(requestid, operon, event)
     resp = make_response(open(fullpath).read())
     resp.content_type = 'image/png'
     return resp
 
 @app.route("/static/<filename>")
 def get_wheel(filename):
-    fullpath = TEMPLATE_STRING.format(filename)
+    fullpath = settings.TEMPLATE_STRING.format(filename)
     resp = make_response(open(fullpath).read())
     if filename == 'wheel.gif':
         resp.content_type = 'image/gif'
