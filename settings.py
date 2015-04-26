@@ -1,7 +1,6 @@
 APPLICATION_PATH = '/vagrant/GBEER/'
 
-UPLOAD_FOLDER = '/vagrant/GBEER/queries/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+QUERY_FOLDER = '/vagrant/GBEER/queries/'
 
 CALCULATION_PATH = '/vagrant/GBEER/gene_block_evolution'
 VISUALIZATION_PATH = '/vagrant/GBEER/operonVisualization'

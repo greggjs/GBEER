@@ -2,8 +2,8 @@ from celery import Celery
 import settings
 import sys, os
 
-sys.path.append(CALCULATION_PATH)
-sys.path.append(VISUALIZATION_PATH)
+sys.path.append(settings.CALCULATION_PATH)
+sys.path.append(settings.VISUALIZATION_PATH)
 
 import create_newick_tree
 import operonVisualUpdate

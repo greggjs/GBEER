@@ -8,18 +8,13 @@ import tasks
 import settings
 import util
 
-sys.path.append(CALCULATION_PATH)
-sys.path.append(VISUALIZATION_PATH)
+sys.path.append(settings.CALCULATION_PATH)
+sys.path.append(settings.VISUALIZATION_PATH)
 
 import create_newick_tree
 import operonVisualUpdate
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = settings.UPLOAD_FOLDER
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in settings.ALLOWED_EXTENSIONS
 
 def get_operons():
     operon_file = open(settings.OPERON_DICT, 'r')
@@ -29,7 +24,7 @@ def get_operons():
     return operons
 
 def get_organisms():
-    org_dir = util.returnRecursiveDirs(GENOME_INFOLDER)
+    org_dir = util.returnRecursiveDirs(settings.GENOME_INFOLDER)
     org_list = ['']
     for org in org_dir:
         split_line = org.split('/')
@@ -45,7 +40,7 @@ def run_query():
     if request.method == 'POST':
         request_id = uuid.uuid1()
         # Make a dir for the request
-        os.mkdir('./queries/' + str(request_id))
+        os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id))
         # Preprocess request for functions
         util.make_genome_dir(request_id, request.form)
         util.make_query_file(request_id, request.form)
