@@ -40,7 +40,7 @@ def run_query():
     if request.method == 'POST':
         request_id = uuid.uuid1()
         # Make a dir for the request
-        os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id))
+        os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)))
         # Preprocess request for functions
         util.make_genome_dir(request_id, request.form)
         util.make_query_file(request_id, request.form)
