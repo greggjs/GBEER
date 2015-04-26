@@ -87,6 +87,9 @@ def check_job(requestid):
 if __name__ == '__main__':
     ORGANISMS = get_organisms()
     OPERONS = get_operons()
-
-    app.debug = True
+    import logging
+    from logging import FileHandler
+        file_handler = FileHandler(settings.LOG_FILE)
+        file_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(file_handler)
     app.run('0.0.0.0')

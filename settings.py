@@ -1,4 +1,5 @@
 APPLICATION_PATH = '/vagrant/GBEER/'
+LOG_FILE = '/vagrant/GBEER/logs/gbeer.log'
 
 QUERY_FOLDER = '/vagrant/GBEER/queries/'
 
