@@ -21,7 +21,7 @@ def make_genome_dir(request_id, form_data):
     for key, value in form_data.iteritems():
         if 'orgList' in key and value is not unicode(''):
             genome_dir = form_data.get(key).replace(' ', '_')
-            os.mkdir(os.path.join(settings.QUERY_PATH, '{0}/genomes/{1}'.format(str(request_id), genome_dir)))
+            os.mkdir(os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}'.format(str(request_id), genome_dir)))
             for f in os.listdir(os.path.join(settings.GENOME_INFOLDER, genome_dir)):
                 shutil.copy2(os.path.join(settings.GENOME_INFOLDER, genome_dir, f), os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}/{2}'.format(str(request_id), genome_dir, f)))
 
