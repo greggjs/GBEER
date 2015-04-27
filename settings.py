@@ -6,7 +6,7 @@ LOG_FILE = os.path.join(APPLICATION_PATH, 'logs/gbeer.log')
 QUERY_FOLDER = os.path.join(APPLICATION_PATH, 'queries/')
 
 CALCULATION_PATH = os.path.join(APPLICATION_PATH, 'gene_block_evolution')
-VISUALIZATION_PATH = os.path.join(APPLICATION_PATH, operonVisualization')
+VISUALIZATION_PATH = os.path.join(APPLICATION_PATH, 'operonVisualization')
 
 OPERON_DICT = os.path.join(CALCULATION_PATH, 'regulonDB/operon_names_and_genes.txt')
 OPERON_INFOLDER = os.path.join(CALCULATION_PATH, 'optimized_operon/')
