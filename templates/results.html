@@ -22,24 +22,24 @@
             var intervals = {};
 
             $('.inner-tab-content').each(function(index, el) {
-                res = checkQuery(el, $(el).attr('id'), $(el).parent().parent().attr('id'));
+                res = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
                 if (res === false) {
                     setInterval(function() {
-                        intervals[$(el).parent().parent().attr('id') + '-' + $(el).attr('id')] = checkQuery(el, $(el).attr('id'), $(el).parent().parent().attr('id'));
+                        intervals[$(el).attr('id')] = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
                     }, 3000);
                 }
             });
             $('.tabs .tab-links a').on('click', function(e)  {
-                var currentAttrValue = jQuery(this).attr('href');
+                var currentAttrValue = $(this).attr('href');
                 // Show/Hide Tabs
                 $('.tabs ' + currentAttrValue).show().siblings().hide();
                 // Change/remove current tab to active
                 $(this).parent('li').addClass('active').siblings().removeClass('active');
                 if ($(this).parent().parent().hasClass('inner-tab')) {
                     var operon = $(this).parent().parent().parent().attr('id');
-                    res = checkQuery(currentAttrValue, currentAttrValue.substring(1), operon);
+                    res = checkQuery(currentAttrValue, $(this).attr('name'), operon);
                     if (res === true) {
-                        clearInterval(intervals[operon + '-' + currentAttrValue.substring(1)]);
+                        clearInterval(intervals[operon + '-' + currentAttrValue.substring(currentValue.indexOf(operon) + 1)]);
                     }
                 }
                 e.preventDefault();
@@ -60,20 +60,20 @@
                 {% for operon in operons %}
                     <div id="{{ operon }}" class="tab{% if loop.index == 0 %} active{% endif %}">
                         <ul class="tab-links inner-tab">
-                            <li class="active"><a href="#deletions">Deletions</a></li>
-                            <li><a href="#duplications">Duplications</a></li>
-                            <li><a href="#splits">Splits</a></li>
+                            <li class="active"><a href="#{{ operon }}-deletions">Deletions</a></li>
+                            <li><a href="#{{ operon }}-duplications">Duplications</a></li>
+                            <li><a href="#{{ operon }}-splits">Splits</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div id="deletions" class="tab inner-tab-content active">
+                            <div id="{{ operon }}-deletions" name="deletions" class="tab inner-tab-content active">
                                 <p>Please wait while your query about {{ operon }} is being processed</p>
                                 <img src="/static/img/wheel.gif" />
                             </div>
-                            <div id="duplications" class="tab inner-tab-content">
+                            <div id="{{ operon }}-duplications" name="duplications" class="tab inner-tab-content">
                                 <p>Please wait while your query about {{ operon }} is being processed</p>
                                 <img src="/static/img/wheel.gif" />
                             </div>
-                            <div id="splits" class="tab inner-tab-content">
+                            <div id="{{ operon }}-splits" name="splits" class="tab inner-tab-content">
                                 <p>Please wait while your query about {{ operon }} is being processed</p>
                                 <img src="/static/img/wheel.gif" />
                             </div>
