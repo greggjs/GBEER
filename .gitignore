@@ -2,4 +2,5 @@ queries
 logs
 operonVisualization/gbeer_developmental
 *.pyc
-msa_temp
+msa_tmp
+
