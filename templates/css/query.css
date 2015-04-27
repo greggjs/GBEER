@@ -4,16 +4,26 @@
 }
 
 #main-block h2 {
-    font-size: 30px;
+    font-size: 45px;
+}
+
+#main-block h3 {
+    text-align: left;
+}
+
+.main-center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
 }
 
 .orgCombo {
-    margin: 20px;
+    margin: 10px;
     width: 70%;
 }
 
 .opCombo {
-    margin: 20px;
+    margin: 10px;
     width: 70%;
 }
 
@@ -22,10 +32,15 @@
 }
 
 #main-block .btn-success {
-    margin: 20px;
+    margin: 10px;
+}
+
+#main-block .btn-danger {
+    margin: 10px;
 }
 
 .orgBlock {
+    margin-right: 5px;
     display: block;
 }
 

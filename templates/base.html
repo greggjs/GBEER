@@ -15,7 +15,9 @@
 </head>
 <body>
     <div id="header"><h3>GBEER</h3></div>
-    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="wrap">
+        <div id="content">{% block content %}{% endblock %}</div>
+    </div>
     <div id="footer">
         {% block footer %}
         &copy; 2015 by Jake Gregg, Miami University.

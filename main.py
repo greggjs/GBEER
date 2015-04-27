@@ -72,6 +72,10 @@ def run_query():
 
     return render_template('query.html', organisms=ORGANISMS, operons=OPERONS)
 
+@app.route('/keg-query', methods=['GET', 'POST'])
+def run_keg_query():
+    return render_template('404.html'), 404
+
 @app.route('/results/<requestid>')
 def get_results(requestid, task_id=None):
     operon_names = util.get_operon_names(requestid)
@@ -113,6 +117,10 @@ def check_job(requestid):
         return make_response('OK', 200)
     else:
         return make_response('NO', 404)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     app.run('0.0.0.0')

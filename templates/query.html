@@ -6,32 +6,33 @@
 {% endblock %}
 {% block title %}Create Query{% endblock %}
 {% block content %}
-    <div class="center" id="main-block">
-        <h2>Create Query</h2>
+    <div class="main-center" id="main-block">
+        <h2>Individual Organism Query</h2>
         <form class="form-horizontal" id="gbeerForm" action="" method="post" enctype="multipart/form-data">
-            <div class="center" id="orgs">
-                <h3>Select organisms for analysis</h3>
-                <div class="orgBlock form-group center">
-                    <select class="orgCombo form-control col-xs-6" name="orgList1" form="gbeerForm" data-index="1" id="orgCombo1">
-                        {% for org in organisms %}
-                            <option value="{{ org }}">{{ org }}</option>
-                        {% endfor %}
-                    </select>
-                    <button onclick="addOperon(this)" type="button" class="btn btn-success col-xs-1">+</button>
+            <div id="org-op-container" class="col-xs-12">
+                <div class="col-xs-6" id="orgs">
+                    <h3>Organisms</h3>
+                    <div class="orgBlock form-group center">
+                        <select class="orgCombo form-control col-xs-6" name="orgList1" form="gbeerForm" data-index="1" id="orgCombo1">
+                            {% for org in organisms %}
+                                <option value="{{ org }}">{{ org }}</option>
+                            {% endfor %}
+                        </select>
+                        <button onclick="addOrganism(this)" type="button" class="btn btn-success col-xs-1">+</button>
+                    </div>
+                </div>
+                <div class="col-xs-6" id="ops">
+                    <h3>Operons</h3>
+                    <div class="opBlock form-group center">
+                        <select class="form-control opCombo col-xs-6" name="opList1" form="gbeerForm" data-index="1" id="opCombo1">
+                            {% for op in operons %}
+                                <option value="{{ op }}">{{ op }}</option>
+                            {% endfor %}
+                        </select>
+                        <button onclick="addOperon(this)" type="button" class="btn btn-success col-xs-1">+</button>
+                    </div>
                 </div>
             </div>
-            <div class="center" id="ops">
-                <h3>Select operons for analysis</h3>
-                <div class="opBlock form-group center">
-                    <select class="form-control opCombo col-xs-6" name="opList1" form="gbeerForm" data-index="1" id="opCombo1">
-                        {% for op in operons %}
-                            <option value="{{ op }}">{{ op }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="button" class="btn btn-success col-xs-1">+</button>
-                </div>
-            </div>
-            <br>
             <div class="form-group center">
                 <input type="submit" class="btn btn-primary">
             </div>
