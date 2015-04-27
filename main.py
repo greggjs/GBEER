@@ -1,9 +1,5 @@
-import os, sys
-import shutil
+import os, sys, uuid, csv, subprocess, shutil, stat
 from flask import Flask, request, redirect, url_for, render_template, make_response
-import uuid
-import csv
-import subprocess
 import tasks
 import settings
 import util
@@ -55,15 +51,12 @@ def run_query():
             app.logger.info('Received task {0}'.format(str(request_id)))
             # Make a dir for the request
             os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)))
+            os.chmod(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)), stat.S_IWOTH | stat.S_IWGRP)
             # Preprocess request for functions
             util.make_genome_dir(request_id, request.form)
-            app.logger.debug('Made genome dir for {0}'.format(str(request_id)))
             util.make_query_file(request_id, request.form)
-            app.logger.debug('Made query file for {0}'.format(str(request_id)))
             operon_names = util.make_operon_filter(request_id, request.form)
-            app.logger.debug('Made operon filter for {0}'.format(str(request_id)))
             util.make_operon_dir(request_id, request.form)
-            app.logger.debug('Made operon dir for {0}'.format(str(request_id)))
 
             current_task = tasks.createJob.apply_async([request_id], task_id=str(request_id))
             app.logger.info('Created task {0} running on Celery Queue'.format(str(request_id)))
