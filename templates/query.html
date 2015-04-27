@@ -1,79 +1,40 @@
 {% extends "base.html" %}
 {% block head %}
     {{ super() }}
-    <script type="text/javascript">
-        $(function() {
-            $('body').on('change', '.orgCombo', function() {
-                var selectedValue = $(this).val();
-                if (selectedValue !== '') {
-                    var newComboBox = $(this).clone();
-                    var thisComboBoxIndex = parseInt($(this).attr('data-index'), 10);
-                    var newComboBoxIndex = thisComboBoxIndex + 1;
-
-                    // $('.parentCombo' + thisComboBoxIndex).remove();
-
-                    if (selectedValue !== '') {
-                        newComboBox.attr('data-index', newComboBoxIndex);
-                        newComboBox.attr('id', 'orgCombo' + newComboBoxIndex);
-                        newComboBox.attr('form', 'gbeerForm');
-                        newComboBox.attr('name', 'orgList' + newComboBoxIndex);
-                        // newComboBox.addClass('parentCombo' + thisComboBoxIndex);
-                        // newComboBox.find('option[val="' + selectedValue + '"]').remove();
-                        $('#orgs').append(newComboBox);
-                        $('#orgs').append('<br/>')
-                    }
-                } else {
-                    $(this).remove();
-                }
-            });
-
-            $('body').on('change', '.opCombo', function() {
-                var selectedValue = $(this).val();
-                if (selectedValue !== '') {
-                    var newComboBox = $(this).clone();
-                    var thisComboBoxIndex = parseInt($(this).attr('data-index'), 10);
-                    var newComboBoxIndex = thisComboBoxIndex + 1;
-
-                    // $('.parentCombo' + thisComboBoxIndex).remove();
-
-                    if (selectedValue !== '') {
-                        newComboBox.attr('data-index', newComboBoxIndex);
-                        newComboBox.attr('id', 'opCombo' + newComboBoxIndex);
-                        newComboBox.attr('form', 'gbeerForm');
-                        newComboBox.attr('name', 'opList' + newComboBoxIndex);
-                        // newComboBox.addClass('parentCombo' + thisComboBoxIndex);
-                        // newComboBox.find('option[val="' + selectedValue + '"]').remove();
-                        $('#ops').append(newComboBox);
-                        $('#ops').append('<br/>')
-                    }
-                } else {
-                    $(this).remove();
-                }
-            });
-        });
-    </script>
+    <link rel="stylesheet" href="/static/css/query.css" />
+    <script src="/static/js/query.js" type="text/javascript"></script>
 {% endblock %}
 {% block title %}Create Query{% endblock %}
 {% block content %}
-    <h2>Create Query</h2>
-    <form id="gbeerForm" action="" method=post enctype=multipart/form-data>
-        <div id=orgs>
-            <h3>Select organisms for analysis</h3>
-            <select class="orgCombo" name="orgList1" form="gbeerForm" data-index="1" id="orgCombo1">
-                {% for org in organisms %}
-                    <option value="{{ org }}">{{ org }}</option>
-                {% endfor %}
-            </select><br/>
-        </div>
-        <div id="ops">
-            <h3>Select operons for analysis</h3>
-            <select class="opCombo" name="opList1" form="gbeerForm" data-index="1" id="opCombo1">
-                {% for op in operons %}
-                    <option value="{{ op }}">{{ op }}</option>
-                {% endfor %}
-            </select><br/>
-        </div>
-        <br/>
-        <input type="submit">
-    </form>
+    <div class="center" id="main-block">
+        <h2>Create Query</h2>
+        <form class="form-horizontal" id="gbeerForm" action="" method="post" enctype="multipart/form-data">
+            <div class="center" id="orgs">
+                <h3>Select organisms for analysis</h3>
+                <div class="orgBlock form-group center">
+                    <select class="orgCombo form-control col-xs-6" name="orgList1" form="gbeerForm" data-index="1" id="orgCombo1">
+                        {% for org in organisms %}
+                            <option value="{{ org }}">{{ org }}</option>
+                        {% endfor %}
+                    </select>
+                    <button onclick="addOperon(this)" type="button" class="btn btn-success col-xs-1">+</button>
+                </div>
+            </div>
+            <div class="center" id="ops">
+                <h3>Select operons for analysis</h3>
+                <div class="opBlock form-group center">
+                    <select class="form-control opCombo col-xs-6" name="opList1" form="gbeerForm" data-index="1" id="opCombo1">
+                        {% for op in operons %}
+                            <option value="{{ op }}">{{ op }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-success col-xs-1">+</button>
+                </div>
+            </div>
+            <br>
+            <div class="form-group center">
+                <input type="submit" class="btn btn-primary">
+            </div>
+        </form>
+    </block>
 {% endblock %}

@@ -1,0 +1,34 @@
+#main-block {
+    background-color: #EDF9FF;
+    text-align: center;
+}
+
+#main-block h2 {
+    font-size: 30px;
+}
+
+.orgCombo {
+    margin: 20px;
+    width: 70%;
+}
+
+.opCombo {
+    margin: 20px;
+    width: 70%;
+}
+
+#main-block .btn-primary {
+    margin-bottom: 20px;
+}
+
+#main-block .btn-success {
+    margin: 20px;
+}
+
+.orgBlock {
+    display: block;
+}
+
+.opBlock {
+    display: block;
+}

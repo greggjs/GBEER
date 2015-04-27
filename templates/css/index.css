@@ -1,0 +1,21 @@
+#main-block {
+    background-color: #EDF9FF;
+    text-align: center;
+}
+
+#main-block h1 {
+    font-size: 100px;
+}
+
+#main-block h2 {
+    font-size: 30px;
+}
+
+#main-block p {
+    font-size: 18px;
+}
+
+#main-block img {
+    width: 35%%;
+    heigh: 35%;
+}

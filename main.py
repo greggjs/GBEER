@@ -42,6 +42,7 @@ file_handler.setFormatter(Formatter(
     '[in %(pathname)s:%(lineno)d]'
 ))
 app.logger.addHandler(file_handler)
+app.debug = True
 
 @app.route('/')
 def get_main():
@@ -84,14 +85,25 @@ def get_image(requestid, operon, event):
     resp.content_type = 'image/png'
     return resp
 
-@app.route("/static/<filename>")
-def get_wheel(filename):
-    fullpath = settings.TEMPLATE_STRING.format(filename)
+@app.route("/static/css/<filename>")
+def get_css(filename):
+    fullpath = settings.TEMPLATE_STRING.format('css/' + filename)
     resp = make_response(open(fullpath).read())
-    if filename == 'wheel.gif':
-        resp.content_type = 'image/gif'
-    elif filename == 'gbeer-style.css':
-        resp.content_type = 'text/css'
+    resp.content_type = 'text/css'
+    return resp
+
+@app.route("/static/img/<filename>")
+def get_wheel(filename):
+    fullpath = settings.TEMPLATE_STRING.format('img/' + filename)
+    resp = make_response(open(fullpath).read())
+    resp.content_type = 'image/gif'
+    return resp
+
+@app.route("/static/js/<filename>")
+def get_js(filename):
+    fullpath = settings.TEMPLATE_STRING.format('js/' + filename)
+    resp = make_response(open(fullpath).read())
+    resp.content_type = 'text/javascript'
     return resp
 
 @app.route("/job/<requestid>")
