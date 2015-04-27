@@ -1,3 +1,5 @@
+import stat
+
 APPLICATION_PATH = '/vagrant/GBEER/'
 LOG_FILE = '/vagrant/GBEER/logs/gbeer.log'
 
@@ -13,3 +15,4 @@ MAPPING_CSV = '/vagrant/GBEER/operonVisualization/data/mapping.csv'
 
 TEMPLATE_STRING = '/vagrant/GBEER/templates/{0}'
 QUERY_STRING = '/vagrant/GBEER/queries/{0}/output_{0}/tree-gd-heat-diagrams_{0}/{1}_{2}'
+PEM_BITS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH

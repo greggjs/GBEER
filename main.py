@@ -1,4 +1,4 @@
-import os, sys, uuid, csv, subprocess, shutil, stat
+import os, sys, uuid, csv, subprocess, shutil
 from flask import Flask, request, redirect, url_for, render_template, make_response
 import tasks
 import settings
@@ -51,7 +51,7 @@ def run_query():
             app.logger.info('Received task {0}'.format(str(request_id)))
             # Make a dir for the request
             os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)))
-            os.chmod(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)), stat.S_IWOTH | stat.S_IWGRP)
+            os.chmod(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)), settings.PEM_BITS)
             # Preprocess request for functions
             util.make_genome_dir(request_id, request.form)
             util.make_query_file(request_id, request.form)
