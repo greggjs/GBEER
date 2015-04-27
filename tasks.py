@@ -2,9 +2,9 @@ from celery import Celery
 import settings
 import sys, os, site
 
-site.addsitedir('/home/greggjs/.virtualenvs/flask/local/lib/python2.7/site-packages')
+site.addsitedir('/home/vagrant/.virtualenvs/flask/local/lib/python2.7/site-packages')
 
-activate_this = os.path.expanduser('/home/greggjs/.virtualenvs/flask/bin/activate_this.py')
+activate_this = os.path.expanduser('/home/vagrant/.virtualenvs/flask/bin/activate_this.py')
 execfile(activate_this, dict(__file__=activate_this))
 
 sys.path.append(settings.CALCULATION_PATH)

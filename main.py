@@ -43,6 +43,10 @@ file_handler.setFormatter(Formatter(
 ))
 app.logger.addHandler(file_handler)
 
+@app.route('/')
+def get_main():
+    return render_template('index.html')
+
 @app.route('/query', methods=['GET', 'POST'])
 def run_query():
     if request.method == 'POST':
