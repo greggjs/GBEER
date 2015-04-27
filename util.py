@@ -1,6 +1,6 @@
 import settings
 import uuid
-import os, sys
+import os, sys, stat
 import shutil
 from flask import request
 
