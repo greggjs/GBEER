@@ -4,7 +4,7 @@ import os, sys, stat
 import shutil
 from flask import request
 
-PEM_BITS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S.IXOTH
+PEM_BITS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
 
 def returnRecursiveDirs(root_dir):
     return [name for name in os.listdir(root_dir) if os.path.isdir(os.path.join(root_dir, name))]
