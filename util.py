@@ -24,7 +24,8 @@ def make_genome_dir(request_id, form_data):
             os.mkdir(os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}'.format(str(request_id), genome_dir)))
             for f in os.listdir(os.path.join(settings.GENOME_INFOLDER, genome_dir)):
                 shutil.copy2(os.path.join(settings.GENOME_INFOLDER, genome_dir, f), os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}/{2}'.format(str(request_id), genome_dir, f)))
-
+    chmod_files = 'chmod -R g+x {0}'.format(os.path.join(settings.QUERY_FOLDER, str(request_id)))
+    os.system(chmod_files)
 
 def make_query_file(request_id, form_data):
     files = returnRecursiveDirFiles(os.path.join(settings.QUERY_FOLDER, '{0}/genomes/'.format(str(request_id))))
