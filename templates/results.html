@@ -37,7 +37,7 @@
                 $(this).parent('li').addClass('active').siblings().removeClass('active');
                 if ($(this).parent().parent().hasClass('inner-tab')) {
                     var operon = $(this).parent().parent().parent().attr('id');
-                    res = checkQuery(currentAttrValue, $(this).attr('name'), operon);
+                    res = checkQuery(currentAttrValue, $(currentAttrValue).attr('name'), operon);
                     if (res === true) {
                         clearInterval(intervals[operon + '-' + currentAttrValue.substring(currentValue.indexOf(operon) + 1)]);
                     }
