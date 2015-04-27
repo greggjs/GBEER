@@ -50,15 +50,14 @@ $(function() {
 
 function addOperon(element) {
     var selectedValue = $(element).val();
-    var newComboBox = $(element).clone();
+    var newComboDiv = $(element).parent().clone();
+    var newCombBox = $(element).parent().children('.orgCombo')
     var thisComboBoxIndex = parseInt($(this).attr('data-index'), 10);
     var newComboBoxIndex = thisComboBoxIndex + 1;
     newComboBox.attr('data-index', newComboBoxIndex);
     newComboBox.attr('id', 'orgCombo' + newComboBoxIndex);
     newComboBox.attr('form', 'gbeerForm');
     newComboBox.attr('name', 'orgList' + newComboBoxIndex);
-    // newComboBox.addClass('parentCombo' + thisComboBoxIndex);
-    // newComboBox.find('option[val="' + selectedValue + '"]').remove();
+    newComboBox.addClass('orgCombo form-control col-xs-6');
     $('#orgs').append(newComboBox);
-    $('#orgs').append('<br/>')
 }

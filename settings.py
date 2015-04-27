@@ -1,6 +1,6 @@
 import stat, os
 
-APPLICATION_PATH = '/vagrant/flask_test/'
+APPLICATION_PATH = '/vagrant/GBEER/'
 LOG_FILE = os.path.join(APPLICATION_PATH, 'logs/gbeer.log')
 
 QUERY_FOLDER = os.path.join(APPLICATION_PATH, 'queries/')
