@@ -53,19 +53,19 @@
         <div class="tabs">
             <ul class="tab-links">
                 {% for operon in operons %}
-                    <li{% if loop.index == 0 %} class="active"{% endif %}><a href="#{{ operon }}">{{ operon }}</a></li>
+                    <li{% if loop.index == 1 %} class="active"{% endif %}><a href="#{{ operon }}">{{ operon }}</a></li>
                 {% endfor %}
             </ul>
             <div class="tab-content">
                 {% for operon in operons %}
-                    <div id="{{ operon }}" class="tab{% if loop.index == 0 %} active{% endif %}">
+                    <div id="{{ operon }}" class="tab" {% if loop.index == 1 %}style="display: block;"{% endif %}>
                         <ul class="tab-links inner-tab">
                             <li class="active"><a href="#{{ operon }}-deletions">Deletions</a></li>
                             <li><a href="#{{ operon }}-duplications">Duplications</a></li>
                             <li><a href="#{{ operon }}-splits">Splits</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div id="{{ operon }}-deletions" name="deletions" class="tab inner-tab-content active">
+                            <div id="{{ operon }}-deletions" name="deletions" class="tab inner-tab-content active" style="display: block;">
                                 <p>Please wait while your query about {{ operon }} is being processed</p>
                                 <img src="/static/img/wheel.gif" />
                             </div>
