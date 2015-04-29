@@ -16,6 +16,7 @@ sys.path.append(settings.VISUALIZATION_PATH)
 
 import create_newick_tree
 import operonVisualUpdate
+from main import app as application
 
 app = Celery('tasks', backend='amqp', broker='amqp://guest@localhost:5672//')
 app.conf.update(CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml'])
@@ -26,34 +27,44 @@ def add(x, y):
 
 @app.task
 def createJob(request_id):
-    # Create the phylo tree for request
-    create_newick_tree.get_newick_tree(os.path.join(settings.QUERY_FOLDER, '{0}/genomes'.format(str(request_id))),
-        os.path.join(settings.QUERY_FOLDER, '{0}/out_tree.nwk'.format(str(request_id))),
-        os.path.join(settings.QUERY_FOLDER, '{0}/phylo_tree.txt'.format(str(request_id))), str(request_id))
+    try:
+        # Create the phylo tree for request
+        create_newick_tree.get_newick_tree(os.path.join(settings.QUERY_FOLDER, '{0}/genomes'.format(str(request_id))),
+            os.path.join(settings.QUERY_FOLDER, '{0}/out_tree.nwk'.format(str(request_id))),
+            os.path.join(settings.QUERY_FOLDER, '{0}/phylo_tree.txt'.format(str(request_id))), str(request_id))
 
-    # Do operon comparisons on request
-    event_cmd = 'python {4} -i {0} -I {1} -o {2} -F {3}'.format(
-        settings.OPERON_DICT, settings.OPERON_INFOLDER,
-        os.path.join(settings.QUERY_FOLDER, '{0}'.format(str(request_id))),
-        os.path.join(settings.QUERY_FOLDER, '{0}/filter_file'.format(str(request_id))),
-        os.path.join(settings.CALCULATION_PATH, 'make_event_distance_matrix.py')
-    )
-    os.system(event_cmd)
+        # Do operon comparisons on request
+        event_cmd = 'python {4} -i {0} -I {1} -o {2} -F {3}'.format(
+            settings.OPERON_DICT, settings.OPERON_INFOLDER,
+            os.path.join(settings.QUERY_FOLDER, '{0}'.format(str(request_id))),
+            os.path.join(settings.QUERY_FOLDER, '{0}/filter_file'.format(str(request_id))),
+            os.path.join(settings.CALCULATION_PATH, 'make_event_distance_matrix.py')
+        )
+        os.system(event_cmd)
 
-    # Normalize results of request
-    matrix_cmd = 'python {1} -i {0}'.format(
-        os.path.join(settings.QUERY_FOLDER, '{0}/event_dict.p'.format(str(request_id))),
-        os.path.join(settings.CALCULATION_PATH, 'get_output_probs.py')
-    )
-    os.system(matrix_cmd)
+        # Normalize results of request
+        matrix_cmd = 'python {1} -i {0}'.format(
+            os.path.join(settings.QUERY_FOLDER, '{0}/event_dict.p'.format(str(request_id))),
+            os.path.join(settings.CALCULATION_PATH, 'get_output_probs.py')
+        )
+        os.system(matrix_cmd)
 
-    operonVisualUpdate.create_operon_images(
-        settings.OPERON_INFOLDER,
-        os.path.join(settings.QUERY_FOLDER, '{0}/asma_outlist.txt'.format(str(request_id))),
-        os.path.join(settings.QUERY_FOLDER, '{0}/out_tree.nwk'.format(str(request_id))),
-        os.path.join(settings.QUERY_FOLDER, '{0}/event_dict.p'.format(str(request_id))),
-        os.path.join(settings.QUERY_FOLDER, '{0}/output'.format(str(request_id))),
-        request_id
-    )
+        operonVisualUpdate.create_operon_images(
+            settings.OPERON_INFOLDER,
+            os.path.join(settings.QUERY_FOLDER, '{0}/asma_outlist.txt'.format(str(request_id))),
+            os.path.join(settings.QUERY_FOLDER, '{0}/out_tree.nwk'.format(str(request_id))),
+            os.path.join(settings.QUERY_FOLDER, '{0}/event_dict.p'.format(str(request_id))),
+            os.path.join(settings.QUERY_FOLDER, '{0}/output'.format(str(request_id))),
+            request_id
+        )
 
-    return True
+        doneFile = open(os.path.join(settings.QUERY_FOLDER, '{0}/status'.format(request_id)), 'w')
+        doneFile.write('COMPLETE')
+        doneFile.close();
+        return True
+    except Exception as e:
+        application.logger.error("Error executing Celery Job {0}".format(str(e)))
+        doneFile = open(os.path.join(settings.QUERY_FOLDER, '{0}/status'.format(request_id)), 'w')
+        doneFile.write('FAILED')
+        doneFile.close();
+        return False

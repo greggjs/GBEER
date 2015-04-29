@@ -173,11 +173,22 @@ def get_js(filename):
 # Check if a job is done or not.
 @app.route("/job/<requestid>")
 def check_job(requestid):
-    task = tasks.createJob.AsyncResult(requestid)
-    if task.ready():
-        return make_response('OK', 200)
-    else:
+    path_to_job = os.path.join(settings.QUERY_FOLDER, requestid)
+    try:
+        task = tasks.createJob.AsyncResult(requestid)
+        if task.ready():
+            return make_response('OK', 200)
+        else:
+            task_status = open(os.path.join(path_to_job, 'status'), 'r')
+            status = task_status.readline()
+            if status == 'COMPLETE':
+                return make_response('OK', 200)
+            else:
+                return make_response('ERROR', 500)
+
+    except IOError:
         return make_response('NO', 404)
+
 
 # Download a Zip archive of a given query and operon
 @app.route("/download/<requestid>/<operon>")

@@ -20,7 +20,12 @@ function checkQuery(e, imgType, operon, request_id) {
             });
             $(".btn-primary").removeAttr("disabled");
             deferred.resolve({ 'check' : true });
-        }).fail(function() {
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 500) {
+                $(e).html('<div class="waiting center"><p>We\'re sorry, but something went wrong running your query. We promise we aren\'t drinking this green beer.<p>'
+                            + '<img src="/static/img/green-beer.png"/><p>Are you sure the Organisms you are examining contain the Operon in question?</p></div>');
+                deferred.resolve({ 'check' : true });
+            }
             deferred.resolve({ 'check' : false });
         });
     }).promise();
