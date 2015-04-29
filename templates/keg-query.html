@@ -6,12 +6,72 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#gbeerForm").submit(function(event){
-                var data = {};
+                kegValue = $(".orgBlock option:selected").val();
+                if (kegValue === "") {
+                    var comboDiv = $('#orgs');
+                    comboDiv.prepend('<div class="alert alert-danger fade in" role="alert">Must select a Keg for query.</div>');
+                    window.setTimeout(function() {
+                        $(".alert").fadeTo(500, 0).slideUp(500, function() {
+                            $(this).remove();
+                        });
+                    }, 3000);
+                    event.preventDefault();
+                    return false;
+                }
                 kegData = $("#keg-contents p");
+                if (kegData.length <= 0) {
+                    var comboDiv = $('#orgs');
+                    comboDiv.prepend('<div class="alert alert-danger fade in" role="alert">Please load the Keg you wish to use.</div>');
+                    window.setTimeout(function() {
+                        $(".alert").fadeTo(500, 0).slideUp(500, function() {
+                            $(this).remove();
+                        });
+                    }, 3000);
+                    event.preventDefault();
+                    return false;
+                }
                 for (var i = 0; i < kegData.length; i++) {
                     $("#keg-contents").append('<input type=\"hidden\" name=\"'
                     + 'orgList' + (i + 1) + '\" value=\"' + $(kegData[i]).text()
                     + '\"></input>');
+                }
+                var opData = $(".opBlock option:selected");
+                var opList = [];
+                blankValue = false;
+                for (var i = 0; i < opData.length; i++) {
+                    var current = $(opData[i]).val();
+                    if (current === "") {
+                        blankValue = true;
+                    }
+                    opList.push(current);
+                }
+                if (opData.length < 1 || opData.length == 1 && blankValue == true) {
+                    var comboDiv = $('#ops');
+                    comboDiv.prepend('<div class="alert alert-danger fade in" role="alert">Must have at least 1 Operon for query.</div>');
+                    window.setTimeout(function() {
+                        $(".alert").fadeTo(500, 0).slideUp(500, function() {
+                            $(this).remove();
+                        });
+                    }, 3000);
+                    event.preventDefault();
+                }
+                var numTimes = opList.length - 1;
+                for (var i = 0; i < numTimes; i++) {
+                    var current = opList.pop();
+                    for (var j = 0; j < opList.length; j++) {
+                        if (current === opList[j]) {
+                            var comboDiv = $('#ops');
+                            comboDiv.prepend('<div class="alert alert-danger fade in" role="alert">Cannot have two or more of the same Operons in query.</div>');
+                            window.setTimeout(function() {
+                                $(".alert").fadeTo(500, 0).slideUp(500, function() {
+                                    $(this).remove();
+                                });
+                            }, 3000);
+                            event.preventDefault();
+                            return false;
+                        }
+                    }
+
                 }
             });
         });

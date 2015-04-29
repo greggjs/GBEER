@@ -24,7 +24,7 @@
                             <li class="active"><a href="#{{ operon }}-deletions">Deletions</a></li>
                             <li><a href="#{{ operon }}-duplications">Duplications</a></li>
                             <li><a href="#{{ operon }}-splits">Splits</a></li>
-                            <li><button type="button" onclick='downloadOperonZip("{{ request_id }}", "{{ operon }}")'class="btn btn-primary">Download Images</button></li>
+                            <li><button type="button" onclick='downloadOperonZip("{{ request_id }}", "{{ operon }}")'class="btn btn-primary" disabled="disabled">Download Images</button></li>
                         </ul>
                         <div class="tab-content">
                             <div id="{{ operon }}-deletions" name="deletions" class="tab inner-tab-content active" style="display: block;">

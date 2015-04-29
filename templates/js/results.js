@@ -18,6 +18,7 @@ function checkQuery(e, imgType, operon, request_id) {
                 zoomWindowWidth: 400,
                 scrollZoom: true
             });
+            $(".btn-primary").removeAttr("disabled");
             deferred.resolve({ 'check' : true });
         }).fail(function() {
             deferred.resolve({ 'check' : false });
