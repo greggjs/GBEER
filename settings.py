@@ -1,6 +1,6 @@
 import stat, os
 
-DEBUG = True
+DEBUG = False
 
 if DEBUG is True:
     APPLICATION_PATH = '/vagrant/flask_test/'
