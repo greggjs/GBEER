@@ -17,6 +17,11 @@ def returnRecursiveDirFiles(root_dir):
     return result
 
 def make_genome_dir(request_id, form_data):
+    our_ancession_nums = []
+    our_ancessions = open(os.path.join(settings.CALCULATION_PATH, 'phylo_order.txt'), 'r')
+    for line in our_ancessions:
+        our_ancession_nums.append(line.rstrip())
+
     os.mkdir(os.path.join(settings.QUERY_FOLDER, '{0}/genomes'.format(str(request_id))))
     os.chmod(os.path.join(settings.QUERY_FOLDER, '{0}/genomes'.format(str(request_id))), settings.PEM_BITS)
     for key, value in form_data.iteritems():
@@ -25,7 +30,12 @@ def make_genome_dir(request_id, form_data):
             os.mkdir(os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}'.format(str(request_id), genome_dir)))
             os.chmod(os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}'.format(str(request_id), genome_dir)), settings.PEM_BITS)
             for f in os.listdir(os.path.join(settings.GENOME_INFOLDER, genome_dir)):
-                shutil.copy2(os.path.join(settings.GENOME_INFOLDER, genome_dir, f), os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}/{2}'.format(str(request_id), genome_dir, f)))
+                f_filename = f.split('/')[-1].rstrip('.gbk')
+                if f_filename in our_ancession_nums:
+                    shutil.copy2(
+                        os.path.join(settings.GENOME_INFOLDER, genome_dir, f),
+                        os.path.join(settings.QUERY_FOLDER, '{0}/genomes/{1}/{2}'.format(str(request_id), genome_dir, f))
+                    )
 
 def make_query_file(request_id, form_data):
     files = returnRecursiveDirFiles(os.path.join(settings.QUERY_FOLDER, '{0}/genomes/'.format(str(request_id))))
