@@ -1,6 +1,7 @@
 from celery import Celery
 import settings
 import sys, os, site
+from main import app as application
 
 if settings.DEBUG is True:
     site.addsitedir('/home/vagrant/.virtualenvs/flask/local/lib/python2.7/site-packages')
@@ -16,16 +17,15 @@ sys.path.append(settings.VISUALIZATION_PATH)
 
 import create_newick_tree
 import operonVisualUpdate
-from main import app as application
 
-app = Celery('tasks', backend='amqp', broker='amqp://guest@localhost:5672//')
-app.conf.update(CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml'])
+taskManager = Celery('tasks', backend='amqp', broker='amqp://guest@localhost:5672//')
+taskManager.conf.update(CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml'])
 
-@app.task
+@taskManager.task
 def add(x, y):
     return x + y
 
-@app.task
+@taskManager.task
 def createJob(request_id):
     try:
         # Create the phylo tree for request
