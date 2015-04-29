@@ -34,8 +34,9 @@
                     var res = checkQuery(currentAttrValue, $(currentAttrValue).attr('name'), operon);
                     $.when(res).done(function(data) {
                         if (data.check === true) {
-                            if (operon + '-' + currentAttrValue.substring(currentAttrValue.indexOf(operon) + 1) in intervals) {
-                                clearInterval(intervals[operon + '-' + currentAttrValue.substring(currentValue.indexOf(operon) + 1)]);
+                            var operonKey = currentAttrValue.substring(1)
+                            if (operonKey in intervals) {
+                                clearInterval(intervals[operonKey]);
                             }
                         }
                     });
