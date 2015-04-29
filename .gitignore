@@ -1,3 +1,17 @@
+gene_block_evolution/blast_parse
+gene_block_evolution/blast_result
+gene_block_evolution/error_log.txt
+gene_block_evolution/event_dict.*
+gene_block_evolution/genomes
+gene_block_evolution/get_output_probs_old.py
+gene_block_evolution/intermediate_for_debug
+gene_block_evolution/jake_phylo_order.txt
+gene_block_evolution/operon_distance_matrices
+gene_block_evolution/optimized_operon
+gene_block_evolution/*.nwk
+gene_block_evolution/phylo_order.txt
+operonVisualization/data
+operonVisualizationn/out_*
 creds.py
 queries
 logs
