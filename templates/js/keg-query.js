@@ -1,38 +1,24 @@
-function addOrganism(element) {
+function getKeg(element) {
     var selectedValue = $(element).parent().children('.orgCombo').val();
-    if (selectedValue === "") {
+    $.ajax({
+        method: 'GET',
+        url: '/keg/' + selectedValue
+    }).done(function(data) {
+        var dataList = data['results'];
+        var dataString = "";
+        for (var i = 0; i < dataList.length; i++) {
+            dataString += "<p>" + dataList[i] + "</p>";
+        }
+        $('#keg-contents').html(dataString);
+    }).error(function() {
         var comboDiv = $('#orgs');
-        comboDiv.prepend('<div class="alert alert-danger fade in" role="alert">Please select an Organism before adding it to your query.</div>');
+        comboDiv.prepend('<div class="alert alert-danger fade in" role="alert">No Contents for given Keg.</div>');
         window.setTimeout(function() {
             $(".alert").fadeTo(500, 0).slideUp(500, function(){
                 $(this).remove();
             });
         }, 3000);
-    } else {
-        var newComboDiv = $(element).parent().clone();
-        var newComboBox = newComboDiv.children('.orgCombo');
-        var newAddBtn = newComboDiv.children('.btn-success');
-
-        var thisComboBoxIndex = parseInt(newComboDiv.children('.orgCombo').attr('data-index'), 10);
-        var newComboBoxIndex = thisComboBoxIndex + 1;
-        newComboBox.attr('data-index', newComboBoxIndex);
-        newComboBox.attr('id', 'orgCombo' + newComboBoxIndex);
-        newComboBox.attr('form', 'gbeerForm');
-        newComboBox.attr('name', 'orgList' + newComboBoxIndex);
-        newComboBox.addClass('orgCombo form-control col-xs-6');
-        $('#orgs').append(newComboDiv);
-        if (!newComboDiv.find('.btn-danger').length != 0) {
-            var newRmBtn = newAddBtn.clone().removeClass('btn-success').addClass('btn-danger col-xs-1').text('-');
-            newRmBtn.attr("onclick", "removeOrganism(this)");
-            newComboDiv.append(newRmBtn);
-        }
-    }
-}
-
-function removeOrganism(element) {
-    var selectedValue = $(element).parent().children('.orgCombo').val();
-    var rmComboDiv = $(element).parent();
-    rmComboDiv.remove();
+    });
 }
 
 function addOperon(element) {

@@ -1,5 +1,7 @@
-import os, sys, uuid, csv, subprocess, shutil
-from flask import Flask, request, redirect, url_for, render_template, make_response
+import os, sys, uuid
+from flask import Flask, request, redirect, url_for, render_template, make_response, jsonify
+import logging
+from logging import FileHandler, Formatter
 import tasks
 import settings
 import util
@@ -28,13 +30,28 @@ def get_organisms():
         org_list.append(new_org)
     return org_list
 
-# Create Org & Operon lists
+def get_kegs():
+    keg_files = util.returnRecursiveDirFiles(settings.KEG_FOLDER)
+    keg_contents = {}
+    keg_names = []
+    for keg in keg_files:
+        current_keg = open(keg, 'r')
+        current_keg_genes = []
+        for key in current_keg:
+            new_org = key.replace('_', ' ').rstrip()
+            current_keg_genes.append(new_org)
+        keg_name = keg.split('/')[-1]
+        keg_names.append(keg_name)
+        keg_contents[keg_name] = current_keg_genes
+    return keg_names, keg_contents
+
+
+# Create Org, Operon, and Keg lists
 ORGANISMS = get_organisms()
 OPERONS = get_operons()
+KEGS, KEG_DICT = get_kegs()
 
 # Create the logger
-import logging
-from logging import FileHandler, Formatter
 file_handler = FileHandler(settings.LOG_FILE)
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(Formatter(
@@ -69,12 +86,43 @@ def run_query():
         except Exception as e:
             app.logger.error('Error creating task {0}'.format(str(request_id)))
             app.logger.error(str(e))
+            return render_template("500.html"), 500
 
     return render_template('query.html', organisms=ORGANISMS, operons=OPERONS)
 
 @app.route('/keg-query', methods=['GET', 'POST'])
 def run_keg_query():
-    return render_template('404.html'), 404
+    if request.method == 'POST':
+        try:
+            request_id = uuid.uuid1()
+            app.logger.info('Received task {0}'.format(str(request_id)))
+            app.logger.info('Form: {0}'.format(str(request.form)))
+            # Make a dir for the request
+            os.mkdir(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)))
+            os.chmod(os.path.join(settings.APPLICATION_PATH, 'queries', str(request_id)), settings.PEM_BITS)
+            # Preprocess request for functions
+            util.make_genome_dir(request_id, request.form)
+            util.make_query_file(request_id, request.form)
+            operon_names = util.make_operon_filter(request_id, request.form)
+            util.make_operon_dir(request_id, request.form)
+
+            current_task = tasks.createJob.apply_async([request_id], task_id=str(request_id))
+            app.logger.info('Created task {0} running on Celery Queue'.format(str(request_id)))
+            return redirect('results/{0}'.format(request_id))
+        except Exception as e:
+            app.logger.error('Error creating task {0}'.format(str(request_id)))
+            app.logger.error(str(e))
+            return render_template("500.html"), 500
+
+
+    return render_template('keg-query.html', kegs=KEGS, operons=OPERONS)
+
+@app.route('/keg/<keg>')
+def get_keg_contents(keg):
+    if keg in KEG_DICT:
+        return jsonify(results=KEG_DICT[keg])
+    else:
+        return make_response('No keg named {0}'.format(keg), 404)
 
 @app.route('/results/<requestid>')
 def get_results(requestid, task_id=None):
@@ -121,6 +169,10 @@ def check_job(requestid):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def int_server_error(e):
+    return render_template('500.html'), 500
 
 if __name__ == '__main__':
     app.run('0.0.0.0')

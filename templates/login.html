@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="/static/css/login.css" />
+{% endblock head %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<div class="center" id="main-block">
+    <h1>Login</h1><br>
+    <div class="container xs-col-6">
+        <div class="row">
+            <a class="btn btn-primary" data-toggle="modal" href="#myModal" >Login</a>
+
+            <div class="modal hide" id="myModal">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h3>Login to MyWebsite.com</h3>
+              </div>
+              <div class="modal-body">
+                <form method="post" action='' name="login_form">
+                  <p><input type="text" class="span3" name="eid" id="email" placeholder="Email"></p>
+                  <p><input type="password" class="span3" name="passwd" placeholder="Password"></p>
+                  <p><button type="submit" class="btn btn-primary">Sign in</button>
+                    <a href="#">Forgot Password?</a>
+                  </p>
+                </form>
+              </div>
+              <div class="modal-footer">
+                New To MyWebsite.com?
+                <a href="#" class="btn btn-primary">Register</a>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a id="ind-button" role="button" class="btn btn-primary btn-large" href="query">Individual Genome Analysis</a>
+        <img src='/static/img/beer.png'>
+        <a id="keg-button" role="button" class="btn btn-primary btn-large" href="keg-query">Genome Keg Analysis</a>
+    </div>
+    <h2>Gene Block Evolution, Evaluation, and Research</h2><br>
+    <div class='main-text'>
+        <p>Gene blocks are proximal genes in the bacterial genome that are suspected of operating together. Known special cases of gene blocks are operons, where the genes are co-transcribed in a polycistronic mRNA. Several models have been proposed to explain observed patterns of gene block evolution. However, there is no universal method to describe gene block evolution, which is necessary for a comprehensive examination of the forces affecting this genomic feature. GBEER offers researchers a graphical method to examine how gene blocks evolve on a case-by-case basis.
+    </div>
+</p>
+</div>
+{% endblock content %}

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.cbook as cbook
 from matplotlib._png import read_png
-from matplotlib.offsetbox import OffsetImage 
+from matplotlib.offsetbox import OffsetImage
 import matplotlib.gridspec as gridspec
 import matplotlib.image as mpimg
 from Bio import Phylo
@@ -23,7 +23,7 @@ from matplotlib.colors import ColorConverter
 from reportlab.lib import colors
 from os.path import split
 
-#defines a red-blue colormap 
+#defines a red-blue colormap
 def blueredcmap():
     BlueRed = {
                'red':  ((0.0, 0.0, 0.0),
@@ -49,7 +49,7 @@ def blueredcmap():
 #produces a heatmap axis with a color bar
 def produceHeat(fig,gridspace3,max_num, min_num, full_len, txtnames):
     mpl.rcParams['xtick.minor.pad']='8'
-    font= mpl.rcParams['font.size']=14.0 
+    font= mpl.rcParams['font.size']=14.0
     absolute_max=abs(max_num)
     absolute_min=abs(min_num)
     cb_boundary=max(absolute_max,absolute_min)
@@ -61,7 +61,7 @@ def produceHeat(fig,gridspace3,max_num, min_num, full_len, txtnames):
     cmap.set_bad('green',1.0)
     ##rect_ht = [0,0.3 , 0.5, 0.8]
     ht_ax=fig.add_subplot(gridspace3)
-    ##ht_ax = plt.axes(rect_ht)    
+    ##ht_ax = plt.axes(rect_ht)
     ht_ax.set_xlim(0,len(txtnames))
     ht_ax.set_ylim(0,len(txtnames))
     divider = make_axes_locatable(ht_ax)
@@ -78,19 +78,19 @@ def produceHeat(fig,gridspace3,max_num, min_num, full_len, txtnames):
     ht_ax.grid(True, which='major')
     ht_ax.set_xticklabels(txtnames, minor=True,rotation=90)
     plt.setp(ht_ax.get_xmajorticklabels(),visible=False)
-    plt.setp(ht_ax.get_yticklabels(),visible=False)    
+    plt.setp(ht_ax.get_yticklabels(),visible=False)
     plt.setp(ht_ax.get_xticklines(),visible=False)
     plt.setp(ht_ax.get_yticklines(),visible=False)
     plt.colorbar(img, cax=cbax)
     return ht_ax
 
 # produces a tree axis with Bio.Phylo returning a matplotlib axis
-# TODO: Each rectangle's co-ordinates needs to be determined via a 
-#       function which is able to distinguish between different categories 
+# TODO: Each rectangle's co-ordinates needs to be determined via a
+#       function which is able to distinguish between different categories
 #       of proteobacteria (alpha,gamma,delta,epsilon,beta).
 def producePhylo(fig,gridspace1,tree_path):
-    font= mpl.rcParams['font.size']=13.0    
-    tree=Phylo.read(tree_path,"newick")    
+    font= mpl.rcParams['font.size']=13.0
+    tree=Phylo.read(tree_path,"newick")
     phyl_ax=fig.add_subplot(gridspace1)
     ##uncomment the next 4 lines to add rectangles on the tree
     ##phyl_ax.add_patch(Rectangle((5.6,16.7),10.2,16.8,edgecolor="brown", fill=False))
@@ -102,28 +102,28 @@ def producePhylo(fig,gridspace1,tree_path):
     phyl_ax.set(xlabel='',ylabel='')
     plt.setp(phyl_ax.get_xticklabels(),visible=False)
     plt.setp(phyl_ax.get_yticklabels(),visible=False)
-    plt.setp(phyl_ax.get_xticklines(),visible=False)    
+    plt.setp(phyl_ax.get_xticklines(),visible=False)
     plt.setp(phyl_ax.get_yticklines(),visible=False)
     return phyl_ax
 
-# produces a genome diagram axis using Image and later clipping the 
+# produces a genome diagram axis using Image and later clipping the
 # extra white space around the GD, plots the resulting image with imshow
 def imshowGD(fig,gridspace2,gdiag):
     ##print gdiag
     ##rect_gd = [-0.47, 0.3, 0.6, 0.8]
-    gd_ax=fig.add_subplot(gridspace2)    
-    ##gd_ax = plt.axes(rect_gd,frameon=True)    
+    gd_ax=fig.add_subplot(gridspace2)
+    ##gd_ax = plt.axes(rect_gd,frameon=True)
     gdiag_img=Image.open(gdiag)
     np_gd = np.asarray(gdiag_img)
     np_gd = np_gd[:,:,0:3]
     idx = np.where(np_gd-255)[0:2]
     box = map(min,idx)[::-1] + map(max,idx)[::-1]
     region = gdiag_img.crop(box)
-    region_pix = np.asarray(region)    
+    region_pix = np.asarray(region)
     gd_ax.imshow(region_pix,interpolation='bilinear', aspect="auto")
     plt.setp(gd_ax.get_xticklabels(),visible=False)
     plt.setp(gd_ax.get_yticklabels(),visible=False)
-    plt.setp(gd_ax.get_xticklines(),visible=False)    
+    plt.setp(gd_ax.get_xticklines(),visible=False)
     plt.setp(gd_ax.get_yticklines(),visible=False)
     return gd_ax
 
@@ -143,28 +143,28 @@ def legendDrawing(fig, gridspace4, geneToColorDict,gd,operon):
         color_str=geneToColorDict[gene]
 
         if i==0 or i % 3!= 0:
-##           ##bb = FancyArrow(x,y,0.1,0.0,length_includes_head=True, width=0.05, 
+##           ##bb = FancyArrow(x,y,0.1,0.0,length_includes_head=True, width=0.05,
 ##                        head_length=0.03, head_width=0.05, fc=color_str, ec=color_str,
 ##                        lw=4)
-           bb = Rectangle((x,y),0.2,0.05,color =color_str, fill=True)             
-           legend_ax.annotate(gene, (x+0.26,y+0.05),size = 15)       
+           bb = Rectangle((x,y),0.2,0.05,color =color_str, fill=True)
+           legend_ax.annotate(gene, (x+0.26,y+0.05),size = 15)
            legend_ax.add_artist(bb)
            x=x + 1
         else:
            y=y + 0.1
            x = 0.1
-##           ##bb = FancyArrow(x,y,0.1,0.0,length_includes_head=True, width=0.05, 
+##           ##bb = FancyArrow(x,y,0.1,0.0,length_includes_head=True, width=0.05,
 ##                        head_length=0.03, head_width=0.05, fc=color_str, ec=color_str,
 ##                        lw=4)
-           bb = Rectangle((x,y),0.2,0.05, color =color_str, fill=True)             
-           legend_ax.annotate(gene, (x+0.26,y+0.05),size = 15)      
+           bb = Rectangle((x,y),0.2,0.05, color =color_str, fill=True)
+           legend_ax.annotate(gene, (x+0.26,y+0.05),size = 15)
            legend_ax.add_artist(bb)
            x=x + 1
     legend_ax.annotate(operon, (1.0,1.25),size = 30)
     legend_ax.axis("off")
-    return legend_ax    
+    return legend_ax
 
-    
+
 def traverseAll(path):
     res=[]
     for root,dirs,files in os.walk(path):
@@ -181,7 +181,7 @@ def traverseAll(path):
 ##    except OSError as exception:
 ##        if exception.errno != errno.EEXIST:
 ##           raise
-##    return joined_path    
+##    return joined_path
 
 
 def combineAll(max_num, min_num, full_len, txtnames, tree_path, operon, gd_files_list, joined_path, pickleDict):
@@ -194,8 +194,8 @@ def combineAll(max_num, min_num, full_len, txtnames, tree_path, operon, gd_files
         ##print "operon:", operon
         ##print "split_gd:", ntpath.basename((gd.split("/")[3]).split(".")[0])
         ##print "split_operon:", operon.split("_")[0]
-        head, tail = os.path.split(gd) 
-        operonName = tail.split(".")[0]       
+        head, tail = os.path.split(gd)
+        operonName = tail.split(".")[0]
         if operonName == operon.split("_")[0]:
            ##print pickleDict.keys()
            ##print ntpath.basename((gd.split("/")[3]).split(".")[0])
@@ -203,9 +203,10 @@ def combineAll(max_num, min_num, full_len, txtnames, tree_path, operon, gd_files
            gd_ax = imshowGD(fig,heatmapGS[0,1],gd)
            legend_ax = legendDrawing(fig,heatmapGS[1,1],geneToColorDict,gd,operon)
            break
-   
+
     ht_ax = produceHeat(fig,heatmapGS[0,2], max_num, min_num, full_len, txtnames)
     fig.savefig(os.path.join(joined_path,operon+".png"), format = 'png'
                  ,bbox_inches='tight',dpi=120)
     plt.close(fig)
+    plt.clf()
     return

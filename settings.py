@@ -18,6 +18,7 @@ OPERON_DICT = os.path.join(CALCULATION_PATH, 'regulonDB/operon_names_and_genes.t
 OPERON_INFOLDER = os.path.join(CALCULATION_PATH, 'optimized_operon/')
 GENOME_INFOLDER = os.path.join(CALCULATION_PATH, 'genomes/')
 MAPPING_CSV = os.path.join(VISUALIZATION_PATH, 'data/mapping.csv')
+KEG_FOLDER = os.path.join(APPLICATION_PATH, 'kegs')
 
 TEMPLATE_STRING = os.path.join(APPLICATION_PATH, 'templates/{0}')
 QUERY_STRING = os.path.join(QUERY_FOLDER, '{0}/output_{0}/tree-gd-heat-diagrams_{0}/{1}_{2}')

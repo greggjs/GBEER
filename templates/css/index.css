@@ -12,10 +12,18 @@
 }
 
 #main-block p {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 #main-block img {
     width: 35%%;
     heigh: 35%;
+}
+
+.main-text {
+    margin-left: 12.5%;
+    margin-right: 12.5%;
+    margin-bottom: 50px;
+    width: 75%;
+    text-align: left;
 }

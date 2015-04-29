@@ -1,0 +1,64 @@
+#main-block {
+    background-color: #EDF9FF;
+    text-align: center;
+}
+
+#main-block h2 {
+    font-size: 45px;
+}
+
+#main-block h3 {
+    text-align: left;
+}
+
+#keg-contents {
+    margin: 10px;
+    height: 250px;
+    width: 85%;
+    background-color: #ffffff;
+    border: solid #66ccff 1px;
+    text-align:left;
+    overflow: scroll;
+}
+
+#keg-contents p {
+    margin-top: 10px;
+}
+
+.main-center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+}
+
+.orgCombo {
+    margin: 10px;
+    width: 70%;
+}
+
+.opCombo {
+    margin: 10px;
+    width: 70%;
+}
+
+#main-block .btn-primary {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#main-block .btn-success {
+    margin: 10px;
+}
+
+#main-block .btn-danger {
+    margin: 10px;
+}
+
+.orgBlock {
+    margin-right: 5px;
+    display: block;
+}
+
+.opBlock {
+    display: block;
+}

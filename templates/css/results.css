@@ -59,3 +59,11 @@ li.active a, li.active a:hover {
 .tab.active {
     display:block;
 }
+
+.waiting {
+    width: 50%;
+}
+
+.center {
+    text-align: center;
+}

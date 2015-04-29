@@ -7,28 +7,22 @@
     <script type="text/javascript">
         function checkQuery(e, imgType, operon) {
             request_id = '{{ request_id }}';
-            $.ajax({
-                method: 'GET',
-                url: '/job/' + request_id
-            }).done(function() {
-                $(e).html('<img style="width: 900px; height: 600px;" src="/img/{{ request_id }}/'
-                    + operon + '/' + imgType + '.png"/>');
-                return true;
-            }).fail(function() {
-                return false;
-            });
+            getStatus = $.Deferred(function(deferred) {
+                $.ajax({
+                    method: 'GET',
+                    url: '/job/' + request_id
+                }).done(function(data, textStatus, jqXHR) {
+                    $(e).html('<img style="width: 900px; height: 600px;" src="/img/{{ request_id }}/'
+                        + operon + '/' + imgType + '.png"/>');
+                    deferred.resolve({ 'check' : true });
+                }).fail(function() {
+                    deferred.resolve({ 'check' : false });
+                });
+            }).promise();
+            return getStatus;
         }
         $(document).ready(function() {
             var intervals = {};
-
-            $('.inner-tab-content').each(function(index, el) {
-                res = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
-                if (res === false) {
-                    setInterval(function() {
-                        intervals[$(el).attr('id')] = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
-                    }, 3000);
-                }
-            });
             $('.tabs .tab-links a').on('click', function(e)  {
                 var currentAttrValue = $(this).attr('href');
                 // Show/Hide Tabs
@@ -37,12 +31,28 @@
                 $(this).parent('li').addClass('active').siblings().removeClass('active');
                 if ($(this).parent().parent().hasClass('inner-tab')) {
                     var operon = $(this).parent().parent().parent().attr('id');
-                    res = checkQuery(currentAttrValue, $(currentAttrValue).attr('name'), operon);
-                    if (res === true) {
-                        clearInterval(intervals[operon + '-' + currentAttrValue.substring(currentValue.indexOf(operon) + 1)]);
-                    }
+                    var res = checkQuery(currentAttrValue, $(currentAttrValue).attr('name'), operon);
+                    $.when(res).done(function(data) {
+                        if (data.check === true) {
+                            if (operon + '-' + currentAttrValue.substring(currentAttrValue.indexOf(operon) + 1) in intervals) {
+                                clearInterval(intervals[operon + '-' + currentAttrValue.substring(currentValue.indexOf(operon) + 1)]);
+                            }
+                        }
+                    });
+
                 }
                 e.preventDefault();
+            });
+            $('.inner-tab-content').each(function(index, el) {
+                var res = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
+                $.when(res).done(function(data) {
+                    if (data.check === false) {
+                        intervals[$(el).attr('id')] = setInterval(function() {
+                            checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
+                        }, 3000);
+                    }
+                });
+
             });
         });
     </script>
@@ -66,16 +76,22 @@
                         </ul>
                         <div class="tab-content">
                             <div id="{{ operon }}-deletions" name="deletions" class="tab inner-tab-content active" style="display: block;">
-                                <p>Please wait while your query about {{ operon }} is being processed</p>
-                                <img src="/static/img/wheel.gif" />
+                                <div class="waiting center">
+                                    <p>Please wait while your query about {{ operon }} is being processed</p>
+                                    <img src="/static/img/wheel.gif" />
+                                </div>
                             </div>
                             <div id="{{ operon }}-duplications" name="duplications" class="tab inner-tab-content">
-                                <p>Please wait while your query about {{ operon }} is being processed</p>
-                                <img src="/static/img/wheel.gif" />
+                                <div class="waiting center">
+                                    <p>Please wait while your query about {{ operon }} is being processed</p>
+                                    <img src="/static/img/wheel.gif" />
+                                </div>
                             </div>
                             <div id="{{ operon }}-splits" name="splits" class="tab inner-tab-content">
-                                <p>Please wait while your query about {{ operon }} is being processed</p>
-                                <img src="/static/img/wheel.gif" />
+                                <div class="waiting center">
+                                    <p>Please wait while your query about {{ operon }} is being processed</p>
+                                    <img src="/static/img/wheel.gif" />
+                                </div>
                             </div>
                         </div>
                     </div>

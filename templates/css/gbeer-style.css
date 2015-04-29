@@ -41,3 +41,8 @@ body {
     margin-right: auto;
     width: 95%;
 }
+
+.site-link {
+    width: 20%;
+    margin-right: 10px;
+}
