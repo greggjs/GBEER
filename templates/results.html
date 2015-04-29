@@ -49,7 +49,15 @@
                 $.when(res).done(function(data) {
                     if (data.check === false) {
                         intervals[$(el).attr('id')] = setInterval(function() {
-                            checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
+                            def = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
+                            $.when(def).done(function(data) {
+                                if (data.check === true) {
+                                    var operonKey = $(el).attr('id');
+                                    if (operonKey in intervals) {
+                                        clearInterval(intervals[operonKey]);
+                                    }
+                                }
+                            });
                         }, 3000);
                     }
                 });
