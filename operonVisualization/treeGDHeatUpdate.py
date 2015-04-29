@@ -205,8 +205,16 @@ def combineAll(max_num, min_num, full_len, txtnames, tree_path, operon, gd_files
            break
 
     ht_ax = produceHeat(fig,heatmapGS[0,2], max_num, min_num, full_len, txtnames)
-    fig.savefig(os.path.join(joined_path,operon+".png"), format = 'png'
+    fig.savefig(os.path.join(joined_path, operon + "-large.png"), format = 'png'
                  ,bbox_inches='tight',dpi=120)
     plt.close(fig)
     plt.clf()
+
+    img = Image.open(os.path.join(joined_path, operon + "-large.png"))
+    img_dimensions = img.size
+
+    img = img.resize((img_dimensions[0] / 2, img_dimensions[1] / 2), Image.ANTIALIAS)
+    img.save(os.path.join(joined_path, operon + "-medium.png"))
+    img = img.resize((img_dimensions[0] / 3, img_dimensions[1] / 3), Image.ANTIALIAS)
+    img.save(os.path.join(joined_path, operon + "-small.png"))
     return

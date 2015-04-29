@@ -67,3 +67,18 @@ li.active a, li.active a:hover {
 .center {
     text-align: center;
 }
+
+.zoom-container {
+    height: 400px;
+    width: 400px;
+    border: solid #66ccff 1px;
+    float: right;
+}
+
+.img-container {
+    text-align: left;
+}
+
+.btn-primary {
+    margin-top: 3px;
+}

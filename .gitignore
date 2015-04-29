@@ -4,3 +4,4 @@ logs
 operonVisualization/gbeer_developmental
 *.pyc
 msa_tmp
+.DS_Store

@@ -3,71 +3,13 @@
 {% block head %}
     {{ super() }}
     <link rel="stylesheet" href="/static/css/results.css" />
+    <script src="/static/js/jquery.elevatezoom.js" type="text/javascript"></script>
+    <script src="/static/js/jquery.fileDownload.js" type="text/javascript"></script>
     <script src="/static/js/results.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        function checkQuery(e, imgType, operon) {
-            request_id = '{{ request_id }}';
-            getStatus = $.Deferred(function(deferred) {
-                $.ajax({
-                    method: 'GET',
-                    url: '/job/' + request_id
-                }).done(function(data, textStatus, jqXHR) {
-                    $(e).html('<img style="width: 900px; height: 600px;" src="/img/{{ request_id }}/'
-                        + operon + '/' + imgType + '.png"/>');
-                    deferred.resolve({ 'check' : true });
-                }).fail(function() {
-                    deferred.resolve({ 'check' : false });
-                });
-            }).promise();
-            return getStatus;
-        }
-        $(document).ready(function() {
-            var intervals = {};
-            $('.tabs .tab-links a').on('click', function(e)  {
-                var currentAttrValue = $(this).attr('href');
-                // Show/Hide Tabs
-                $('.tabs ' + currentAttrValue).show().siblings().hide();
-                // Change/remove current tab to active
-                $(this).parent('li').addClass('active').siblings().removeClass('active');
-                if ($(this).parent().parent().hasClass('inner-tab')) {
-                    var operon = $(this).parent().parent().parent().attr('id');
-                    var res = checkQuery(currentAttrValue, $(currentAttrValue).attr('name'), operon);
-                    $.when(res).done(function(data) {
-                        if (data.check === true) {
-                            var operonKey = currentAttrValue.substring(1)
-                            if (operonKey in intervals) {
-                                clearInterval(intervals[operonKey]);
-                            }
-                        }
-                    });
-
-                }
-                e.preventDefault();
-            });
-            $('.inner-tab-content').each(function(index, el) {
-                var res = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
-                $.when(res).done(function(data) {
-                    if (data.check === false) {
-                        intervals[$(el).attr('id')] = setInterval(function() {
-                            def = checkQuery(el, $(el).attr('name'), $(el).parent().parent().attr('id'));
-                            $.when(def).done(function(data) {
-                                if (data.check === true) {
-                                    var operonKey = $(el).attr('id');
-                                    if (operonKey in intervals) {
-                                        clearInterval(intervals[operonKey]);
-                                    }
-                                }
-                            });
-                        }, 3000);
-                    }
-                });
-
-            });
-        });
-    </script>
 {% endblock %}
 {% block content %}
     <div class="center" id="main-block">
+        <input type="hidden" id="requestId" value="{{ request_id }}"/>
         <h2>Results</h2>
         <div class="tabs">
             <ul class="tab-links">
@@ -82,6 +24,7 @@
                             <li class="active"><a href="#{{ operon }}-deletions">Deletions</a></li>
                             <li><a href="#{{ operon }}-duplications">Duplications</a></li>
                             <li><a href="#{{ operon }}-splits">Splits</a></li>
+                            <li><button type="button" onclick='downloadOperonZip("{{ request_id }}", "{{ operon }}")'class="btn btn-primary">Download Images</button></li>
                         </ul>
                         <div class="tab-content">
                             <div id="{{ operon }}-deletions" name="deletions" class="tab inner-tab-content active" style="display: block;">

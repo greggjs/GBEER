@@ -5,6 +5,7 @@ from logging import FileHandler, Formatter
 import tasks
 import settings
 import util
+from zipfile import ZipFile
 
 sys.path.append(settings.CALCULATION_PATH)
 sys.path.append(settings.VISUALIZATION_PATH)
@@ -14,6 +15,7 @@ import operonVisualUpdate
 
 app = Flask(__name__)
 
+# Utility functions, prior to start up.
 def get_operons():
     operon_file = open(settings.OPERON_DICT, 'r')
     operons = ['']
@@ -61,10 +63,12 @@ file_handler.setFormatter(Formatter(
 app.logger.addHandler(file_handler)
 app.debug = True
 
+# Gets the splash page.
 @app.route('/')
 def get_main():
     return render_template('index.html')
 
+# Handles POST and GET requests for Regular Queries
 @app.route('/query', methods=['GET', 'POST'])
 def run_query():
     if request.method == 'POST':
@@ -90,6 +94,7 @@ def run_query():
 
     return render_template('query.html', organisms=ORGANISMS, operons=OPERONS)
 
+# Handles POST and GET requests for Keg Queries.
 @app.route('/keg-query', methods=['GET', 'POST'])
 def run_keg_query():
     if request.method == 'POST':
@@ -117,6 +122,7 @@ def run_keg_query():
 
     return render_template('keg-query.html', kegs=KEGS, operons=OPERONS)
 
+# Get Keg data for a given Keg id.
 @app.route('/keg/<keg>')
 def get_keg_contents(keg):
     if keg in KEG_DICT:
@@ -124,12 +130,14 @@ def get_keg_contents(keg):
     else:
         return make_response('No keg named {0}'.format(keg), 404)
 
+# Open the results page for a given request id
 @app.route('/results/<requestid>')
 def get_results(requestid, task_id=None):
     operon_names = util.get_operon_names(requestid)
 
     return render_template('results.html', operons=operon_names, request_id=requestid, task_id=task_id)
 
+# Get a query image given a job, operon, and event
 @app.route("/img/<requestid>/<operon>/<event>")
 def get_image(requestid, operon, event):
     fullpath = settings.QUERY_STRING.format(requestid, operon, event)
@@ -137,6 +145,8 @@ def get_image(requestid, operon, event):
     resp.content_type = 'image/png'
     return resp
 
+# Utility calls
+# Get static CSS files
 @app.route("/static/css/<filename>")
 def get_css(filename):
     fullpath = settings.TEMPLATE_STRING.format('css/' + filename)
@@ -144,6 +154,7 @@ def get_css(filename):
     resp.content_type = 'text/css'
     return resp
 
+# Get static image files that are not query images.
 @app.route("/static/img/<filename>")
 def get_wheel(filename):
     fullpath = settings.TEMPLATE_STRING.format('img/' + filename)
@@ -151,6 +162,7 @@ def get_wheel(filename):
     resp.content_type = 'image/gif'
     return resp
 
+# Get static JS files
 @app.route("/static/js/<filename>")
 def get_js(filename):
     fullpath = settings.TEMPLATE_STRING.format('js/' + filename)
@@ -158,6 +170,7 @@ def get_js(filename):
     resp.content_type = 'text/javascript'
     return resp
 
+# Check if a job is done or not.
 @app.route("/job/<requestid>")
 def check_job(requestid):
     task = tasks.createJob.AsyncResult(requestid)
@@ -166,6 +179,25 @@ def check_job(requestid):
     else:
         return make_response('NO', 404)
 
+# Download a Zip archive of a given query and operon
+@app.route("/download/<requestid>/<operon>")
+def download_query_operon(requestid, operon):
+    results_dir = os.path.join(settings.QUERY_FOLDER, '{0}/output_{0}/tree-gd-heat-diagrams_{0}'.format(requestid))
+    new_archive_name = '{1}-{0}.zip'.format(requestid, operon)
+    os.chdir(results_dir)
+    new_archive = ZipFile(new_archive_name, 'w')
+    for result in util.returnRecursiveDirFiles(results_dir):
+        if '.zip' not in result.split('/')[-1]:
+            new_archive.write(result.split('/')[-1])
+    new_archive.close()
+    os.chdir(settings.APPLICATION_PATH)
+
+    resp = make_response(open(os.path.join(results_dir, new_archive_name)).read())
+    resp.content_type = 'application/zip'
+    resp.headers["Content-Disposition"] = "attachment; filename={0}.zip".format(new_archive_name)
+    return resp
+
+# Error handlers
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
