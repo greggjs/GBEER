@@ -1,7 +1,6 @@
 from celery import Celery
 import settings
 import sys, os, site
-from main import app as application
 
 if settings.DEBUG is True:
     site.addsitedir('/home/vagrant/.virtualenvs/flask/local/lib/python2.7/site-packages')
@@ -63,7 +62,6 @@ def createJob(request_id):
         doneFile.close();
         return True
     except Exception as e:
-        application.logger.error("Error executing Celery Job {0}".format(str(e)))
         doneFile = open(os.path.join(settings.QUERY_FOLDER, '{0}/status'.format(request_id)), 'w')
         doneFile.write('FAILED')
         doneFile.close();
