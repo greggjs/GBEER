@@ -22,8 +22,10 @@ function checkQuery(e, imgType, operon, request_id) {
             deferred.resolve({ 'check' : true });
         }).fail(function(jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 500) {
-                $(e).html('<div class="waiting center"><p>We\'re sorry, but something went wrong running your query. We promise we aren\'t drinking this green beer.<p>'
-                            + '<img src="/static/img/green-beer.png"/><p>Are you sure the Organisms you are examining contain the Operon in question?</p></div>');
+                $(e).html('<div class="waiting center"><p>We\'re sorry, but something went wrong accessing the status of your query. We promise we aren\'t drinking this green beer.<p>'
+                            + '<img src="/static/img/green-beer.png"/><p>Are you sure the Organisms you are examining contain the Operon in question?</p><br>'
+                            + '<p>If this is an old query, if it\'s been more than a week since its submission, it was removed from the system to make sure '
+                            + 'everyone has enough space to make great queries just like yours.</p></div>');
                 deferred.resolve({ 'check' : true });
             }
             deferred.resolve({ 'check' : false });
